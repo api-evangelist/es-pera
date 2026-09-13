@@ -1,0 +1,18 @@
+generated: '2026-09-13'
+method: derived
+source: 'openapi/es-pera-openapi.json (security: []) + https://es-pera.org/metodologia/api/'
+name: ES·pera API authentication
+summary: >-
+  The ES·pera public API is open and unauthenticated. The OpenAPI declares an
+  empty top-level security requirement (security: []) and no securitySchemes,
+  and the API documentation states operations require no authentication and are
+  read-only (GET/HEAD only). Access is instead governed by anonymous rate limits.
+schemes: []
+auth_required: false
+public_access: true
+notes:
+  - The whole surface is open read-only public open data; there is no API key,
+    OAuth, or token mechanism.
+  - Traffic is shaped by anonymous rate limits (120 req/min overall; 20 req/min
+    for /waiting/facets and /waiting/observations) rather than by credentials.
+    See rate-limits/es-pera-rate-limits.yml.

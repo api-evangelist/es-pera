@@ -1,0 +1,15 @@
+generated: '2026-09-13'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: es-pera.org
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Nov 20 09:55:55 2026 GMT
+  hsts: false
+domains:
+- domain: es-pera.org
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: false

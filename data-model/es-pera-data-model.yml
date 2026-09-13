@@ -1,0 +1,69 @@
+generated: '2026-09-13'
+method: derived
+source: openapi/es-pera-openapi.json ($ref graph + id-reference fields)
+name: ES·pera API data model
+note: >-
+  Derived from the OpenAPI component schemas and their $ref links. Entity identifiers
+  are opaque strings; there is no public id-prefix scheme (internal source-unit identifiers
+  are intentionally omitted from the public contract).
+entities:
+  - name: CurrentReleases
+    description: The active release set backing every response.
+    fields: [release_id, schema_version, content_sha256, label, source_commit, data_date, created_at]
+  - name: RegistryRelease
+    description: Hospital registry release (center directory).
+  - name: WaitingRelease
+    description: Autonomous waiting-list catalog release (schema_version 2).
+    fields: [catalog_release_id, schema_version, content_sha256, label, source_commit, created_at, notes]
+  - name: EntitySummary
+    description: A hospital or hospital complex in the active release.
+    fields: [id, entityType, ccn, codcnh, name, municipality, ccaa, routePath, capabilities]
+  - name: EntityCapabilities
+    description: Booleans and metadata flagging which data layers exist for an entity.
+  - name: EntityDetailResponse
+    description: Full published detail for one entity.
+    fields: [releaseId, registryReleaseId, entity, capabilities, observations, peerReference, peerReferenceYears, provenance]
+  - name: HospitalObservation
+    description: One national hospital-activity metric observation.
+    fields: [metric_id, label, domain, kind, period_year, observation_kind, value_num, perimeter]
+  - name: PublicHospitalProvenance
+    description: Provenance record (publisher "Ministerio de Sanidad", layer "national-hospital-activity").
+  - name: Health
+    description: Service availability + active release identifiers.
+relationships:
+  - from: CurrentReleases
+    to: RegistryRelease
+    type: has_one
+    via: registryRelease
+  - from: CurrentReleases
+    to: WaitingRelease
+    type: has_one
+    via: waitingRelease
+  - from: EntitySummary
+    to: EntityCapabilities
+    type: has_one
+    via: capabilities
+  - from: EntityDetailResponse
+    to: EntitySummary
+    type: has_one
+    via: entity
+  - from: EntityDetailResponse
+    to: EntityCapabilities
+    type: has_one
+    via: capabilities
+  - from: EntityDetailResponse
+    to: HospitalObservation
+    type: has_many
+    via: observations
+  - from: EntityDetailResponse
+    to: PublicHospitalProvenance
+    type: has_one
+    via: provenance
+  - from: getEntity
+    to: EntitySummary
+    type: belongs_to
+    via: entityId (path; opaque id returned by /entities)
+domains:
+  observation_domains: [consultation, surgery, diagnostic_test]
+  waiting_perimeters: [community, province, area, centre]
+  entity_types: [hospital, complex]

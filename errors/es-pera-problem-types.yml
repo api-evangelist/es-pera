@@ -1,0 +1,36 @@
+generated: '2026-09-13'
+method: derived
+source: openapi/es-pera-openapi.json (component responses) + live 400/404 probes
+name: ES·pera API error catalog
+format: custom
+envelope: '{ "error": { "code": string, "message": string } }'
+rfc9457: false
+note: >-
+  Not application/problem+json. Every error returns application/json with a single
+  error object carrying a machine code and a human message. HTTP status carries the class.
+problem_types:
+  - status: 400
+    response: BadRequest
+    title: Invalid filters or identifier
+    codes_observed:
+      - code: COMMUNITY_REQUIRED
+        message: A community slug is required.
+        surface: getWaitingFacets / listWaitingObservations (missing required community param)
+    remediation: Supply valid query parameters / a valid path identifier per the OpenAPI schema.
+  - status: 404
+    response: NotFound
+    title: Entity not found in the active release
+    codes_observed:
+      - code: ENTITY_NOT_FOUND
+        message: Entity not found in this deployment release.
+        surface: getEntity (unknown entityId)
+    remediation: Use an entityId returned by /entities against the current release.
+  - status: 429
+    response: TooManyRequests
+    title: Anonymous rate limit exceeded
+    headers: [Retry-After, RateLimit-Limit, RateLimit-Policy]
+    remediation: Wait the number of seconds in Retry-After before retrying; do not run parallel retries.
+  - status: 503
+    response: Unavailable
+    title: A configured release is unavailable
+    remediation: Transient; retry later. Indicates a pinned data release could not be served.

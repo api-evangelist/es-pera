@@ -1,0 +1,63 @@
+generated: '2026-09-13'
+method: derived
+source: openapi/es-pera-openapi.json + https://es-pera.org/metodologia/api/ + live response headers
+name: ES·pera API conventions
+auth_style: none (open, unauthenticated read-only)
+http_methods: [GET, HEAD]
+media_type: application/json; charset=utf-8
+versioning:
+  style: uri-path
+  current: v1
+  base: https://es-pera.org/api/v1
+  note: >-
+    Responses are served from immutable release identifiers pinned per deployment
+    (releaseId, registryReleaseId, waitingReleaseId), each carrying a content SHA-256.
+    See lifecycle/es-pera-lifecycle.yml.
+pagination:
+  style: offset-limit
+  params:
+    limit: { in: query, default: 100, max: 200, note: listWaitingObservations; entities uses default 20 / max 50 }
+    offset: { in: query, default: 0, max: 50000 }
+  response_fields:
+    - limit
+    - offset
+    - returned
+    - hasMore
+    - nextOffset
+  note: Follow pagination.hasMore and pagination.nextOffset until the result set is complete.
+request_id_tracing:
+  header: x-request-id
+  observed: true
+  note: Observed on a live 200 /api/v1/health response (x-request-id).
+error_envelope:
+  shape: '{ "error": { "code": string, "message": string } }'
+  rfc9457: false
+  note: >-
+    Custom error envelope, NOT application/problem+json. Codes observed live include
+    COMMUNITY_REQUIRED (400) and ENTITY_NOT_FOUND (404). See errors/es-pera-problem-types.yml.
+rate_limit_signaling:
+  headers: [RateLimit-Limit, RateLimit-Policy, Retry-After]
+  exhaustion_status: 429
+  note: See rate-limits/es-pera-rate-limits.yml.
+metadata_and_provenance:
+  note: >-
+    Observations carry period, unit, perimeter, source and provenance fields that must be
+    preserved on reuse; null means "unavailable", never zero. Entity identifiers are opaque
+    and must be reused verbatim (do not infer identity from similar names).
+idempotency:
+  coverage: na
+  note: >-
+    The surface is entirely read-only (GET/HEAD, no write operations), so there is no
+    mutating surface for an Idempotency-Key mechanism to protect. GET/HEAD are inherently
+    idempotent per HTTP semantics.
+reversibility:
+  grade: na
+  note: Read-only API with no write, create, delete, or state-changing operations; nothing to reverse.
+dry_run_mode:
+  supported: na
+  note: No write surface, so dry-run rehearsal is not applicable.
+cross_links:
+  errors: errors/es-pera-problem-types.yml
+  lifecycle: lifecycle/es-pera-lifecycle.yml
+  authentication: authentication/es-pera-authentication.yml
+  rate_limits: rate-limits/es-pera-rate-limits.yml

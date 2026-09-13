@@ -1,0 +1,35 @@
+generated: '2026-09-13'
+method: searched
+source: https://es-pera.org/metodologia/api/ and openapi/es-pera-openapi.json (info.description + TooManyRequests response)
+name: ES·pera API rate limits
+scope: per-client (anonymous IP)
+exhaustion_status: 429
+limits:
+  - name: global-anonymous
+    scope: per-client
+    window: 60s
+    limit: 120
+    applies_to: all operations
+    note: Documented as "El tráfico anónimo está limitado a 120 solicitudes por minuto."
+  - name: waiting-facets-observations
+    scope: per-client
+    window: 60s
+    limit: 20
+    applies_to:
+      - getWaitingFacets   # GET /waiting/facets
+      - listWaitingObservations  # GET /waiting/observations
+    note: These two endpoints carry an additional stricter 20/min sub-limit within the global 120/min.
+response_headers:
+  - name: RateLimit-Limit
+    description: Maximum applicable in the current window (example 120).
+    observed_on: 429
+  - name: RateLimit-Policy
+    description: Policy applied with limit and window in seconds (example "120;w=60").
+    observed_on: 429
+  - name: Retry-After
+    description: Seconds the client must wait before retrying.
+    observed_on: 429
+notes:
+  - The documented RateLimit-* / Retry-After headers are declared on the 429 TooManyRequests
+    response in the OpenAPI; a live 200 /api/v1/health response did not echo RateLimit-* headers.
+  - Clients must honor Retry-After on 429 and avoid parallel retries (per the provider Agent Skill).

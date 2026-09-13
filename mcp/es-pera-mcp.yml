@@ -1,0 +1,43 @@
+generated: '2026-09-13'
+method: derived
+source: openapi/es-pera-openapi.json (no published MCP server found via search of docs, llms.txt, GitHub)
+name: ES·pera MCP (candidate)
+status: candidate
+deployment:
+  mode: none
+  auth: none
+  verified: derived
+note: >-
+  No official hosted or local MCP server was found. The provider does publish an
+  Agent Skills index (skills/es-pera-public-data.md) and an llms.txt, but no MCP
+  endpoint or npx/pip package. The tools below are a DERIVED candidate mapping of the
+  read-only OpenAPI operations; no server implements them. endpoint/install are
+  intentionally empty (mode: none).
+candidate_tools:
+  - tool: get_health
+    rest: getHealth
+    description: Service availability and active release identifiers.
+  - tool: get_current_releases
+    rest: getCurrentReleases
+    description: Active data release identifiers backing the response.
+  - tool: list_metrics
+    rest: listMetrics
+    description: Available hospital metrics.
+  - tool: list_entities
+    rest: listEntities
+    description: Search hospitals/complexes (q, ccaa, type, limit).
+  - tool: get_entity
+    rest: getEntity
+    description: Published detail for one entity by opaque id.
+  - tool: get_current_waiting_release
+    rest: getCurrentWaitingRelease
+    description: Active autonomous waiting-list release metadata.
+  - tool: list_waiting_communities
+    rest: listWaitingCommunities
+    description: Autonomous-community coverage.
+  - tool: get_waiting_facets
+    rest: getWaitingFacets
+    description: Available filters for a community (required community slug).
+  - tool: list_waiting_observations
+    rest: listWaitingObservations
+    description: Paginated autonomous waiting-list observations.

@@ -1,0 +1,38 @@
+overlay: 1.0.0
+info:
+  title: ES·pera API Evangelist enrichment overlay
+  version: 1.0.0
+extends: ../openapi/es-pera-openapi.json
+x-provenance:
+  generated: '2026-09-13'
+  method: generated
+  source: >-
+    Derived enrichments over the fetched first-party spec (openapi/es-pera-openapi.json).
+    Does not mutate the original; captures API Evangelist annotations only.
+actions:
+  - target: $.info
+    description: Record open, unauthenticated read-only access and free open-data licensing posture.
+    update:
+      x-authentication: none
+      x-access: public-read-only
+      x-pricing: free
+      x-http-methods: [GET, HEAD]
+  - target: $.info
+    description: Note the RFC 9727 API catalog discovery document.
+    update:
+      x-api-catalog: https://es-pera.org/.well-known/api-catalog
+      x-llms-txt: https://es-pera.org/llms.txt
+      x-agent-skills-index: https://es-pera.org/.well-known/agent-skills/index.json
+  - target: $.paths['/waiting/observations'].get
+    description: Flag the stricter 20/min sub-limit on this endpoint.
+    update:
+      x-rate-limit: '20;w=60 (within the global 120;w=60)'
+  - target: $.paths['/waiting/facets'].get
+    description: Flag the stricter 20/min sub-limit on this endpoint.
+    update:
+      x-rate-limit: '20;w=60 (within the global 120;w=60)'
+  - target: $.components.schemas.Error
+    description: Note that the error envelope is a custom shape, not RFC 9457 problem+json.
+    update:
+      x-error-format: custom
+      x-rfc9457: false

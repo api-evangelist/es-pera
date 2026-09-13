@@ -1,0 +1,33 @@
+generated: '2026-09-13'
+method: probed
+source: live probes of /.well-known/* on every known host
+name: ES·pera well-known documents
+hosts:
+  - host: es-pera.org
+    documents:
+      - path: /.well-known/api-catalog
+        status: 200
+        file: es-pera-api-catalog.json
+        note: >-
+          RFC 9727 linkset (content-type application/linkset+json;profile=".../rfc9727"),
+          resolving service-desc (openapi.json), service-doc (metodologia/api) and status (health).
+      - path: /.well-known/agent-skills/index.json
+        status: 200
+        file: agent-skills/es-pera-agent-skills-index.json
+        note: >-
+          Agent Skills discovery index v0.2.0 listing one skill (es-pera-public-data) with a
+          SHA-256 digest. Not a standard /.well-known/* scored doc; see skills/_index.yml.
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404

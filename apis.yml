@@ -1,9 +1,15 @@
 name: ES·pera API
-description: Spanish-language open-data project comparing Spanish National Health System (SNS) healthcare waiting
-  lists across autonomous communities, specialties and procedures. Publishes free machine-readable open-data files
-  (CSV and static JSON), but exposes no documented REST/GraphQL API, no MCP server, and no confirmable llms.txt
-  or agent skills.
+description: >-
+  ES·pera is an independent Spanish-language observatory that gathers scattered official
+  Spanish National Health System (SNS) and autonomous-community publications on healthcare
+  waiting lists and hospital activity, and republishes them as comparable, provenance-preserving
+  open data. It exposes a free, open, unauthenticated read-only REST API (OpenAPI 3.1 at
+  /api/v1) covering hospital entities, national activity metrics and autonomous waiting-list
+  observations, served from immutable content-addressed data releases. Discovery is via an
+  RFC 9727 API catalog, an llms.txt, and a provider-published Agent Skill; there is no MCP
+  server, no A2A agent card, and no client SDK.
 url: https://raw.githubusercontent.com/api-evangelist/es-pera/refs/heads/main/apis.yml
+image: https://es-pera.org/favicon-espera.svg
 created: '2026-09-13'
 modified: '2026-09-13'
 specificationVersion: '0.21'
@@ -15,12 +21,18 @@ tags:
 - Spain
 - public sector
 - government data
+- SNS
 apis:
-- name: ES·pera Open Data Files
-  description: 'Static, unauthenticated open-data exports of SNS waiting-list data: a bulk CSV and per-visualization
-    static JSON arrays. These are downloadable machine-readable files, not a documented parameterized API.'
-  humanURL: https://es-pera.org/metodologia/
-  baseURL: https://es-pera.org/data/
+- name: ES·pera Public Data API
+  description: >-
+    Open, unauthenticated read-only REST API (GET/HEAD, JSON) over SNS hospital and
+    autonomous-community waiting-list open data. Nine operations across health/releases,
+    hospital entities and metrics, and paginated autonomous waiting-list observations.
+    Responses are served from immutable, content-addressed data releases; anonymous
+    traffic is rate limited (120/min overall, 20/min for facets and observations).
+  humanURL: https://es-pera.org/metodologia/api/
+  baseURL: https://es-pera.org/api/v1
+  image: https://es-pera.org/favicon-espera.svg
   tags:
   - healthcare
   - open data
@@ -31,14 +43,60 @@ apis:
   - government data
   properties:
   - type: OpenAPI
-    url: https://es-pera.org/openapi.json
+    url: openapi/es-pera-openapi.json
+  - type: Overlay
+    url: overlays/es-pera-openapi-overlay.yaml
   - type: Documentation
-    url: https://es-pera.org/metodologia/
+    url: https://es-pera.org/metodologia/api/
+  - type: APIReference
+    url: https://es-pera.org/metodologia/api/
 maintainers:
 - FN: ES·pera API
   url: https://es-pera.org/
 x-source:
   via: apis.io/add es-pera 1d7101bd, parked no_consumable_surface
   fetched: '2026-09-13'
-  note: 'Approved: the declared /data/ 404s but the real OpenAPI is at es-pera.org/openapi.json (200); pointer corrected.
-    Control 404s.'
+  note: >-
+    Enrichment corrected the prior round: the declared /data/ base 404s, but a real
+    first-party OpenAPI 3.1 (9 read-only ops) is live at es-pera.org/openapi.json with
+    servers https://es-pera.org/api/v1. baseURL and pointers corrected to the real API.
+common:
+- type: DomainSecurity
+  url: security/es-pera-domain-security.yml
+- type: Website
+  url: https://es-pera.org/
+- type: DeveloperPortal
+  url: https://es-pera.org/metodologia/
+- type: Documentation
+  url: https://es-pera.org/metodologia/
+- type: LLMsTxt
+  url: llms/es-pera-llms.txt
+- type: WellKnown
+  url: well-known/es-pera-well-known.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Authentication
+  url: authentication/es-pera-authentication.yml
+- type: Conventions
+  url: conventions/es-pera-conventions.yml
+- type: RateLimits
+  url: rate-limits/es-pera-rate-limits.yml
+- type: Conformance
+  url: conformance/es-pera-conformance.yml
+- type: ErrorCatalog
+  url: errors/es-pera-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/es-pera-lifecycle.yml
+- type: DataModel
+  url: data-model/es-pera-data-model.yml
+- type: Plans
+  url: plans/es-pera-plans-pricing.yml
+- type: ChangeLog
+  url: changelog/es-pera-changelog.yml
+- type: X-MCPServerCandidate
+  url: mcp/es-pera-mcp.yml
+x-enrichment:
+  date: '2026-09-13'
+  status: enriched
+  artifacts_added: 19
+  pass: local-v3

@@ -1,0 +1,27 @@
+generated: '2026-09-13'
+method: searched
+source: https://es-pera.org/.well-known/agent-skills/index.json (v0.2.0)
+name: ES·pera Agent Skills
+note: >-
+  Provider-published Agent Skill, fetched verbatim from the provider's own Agent Skills
+  discovery index. Digest verified: the fetched SKILL.md sha256 matches the index digest
+  (128fd5810a52e0f22eef111c992b959af49811a9d6dd3421be1ca72cfaaece10).
+skills:
+  - name: es-pera-public-data
+    file: es-pera-public-data.md
+    type: skill-md
+    method: searched
+    source: https://es-pera.org/.well-known/agent-skills/es-pera-public-data/SKILL.md
+    digest: sha256:128fd5810a52e0f22eef111c992b959af49811a9d6dd3421be1ca72cfaaece10
+    digest_verified: true
+    description: >-
+      Consult published ES·pera data about Spanish healthcare waiting lists and hospitals
+      through the public read-only API while preserving release, source, period and
+      reporting perimeter.
+    operations:
+      - getCurrentReleases
+      - listEntities
+      - getEntity
+      - listWaitingCommunities
+      - getWaitingFacets
+      - listWaitingObservations

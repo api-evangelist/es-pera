@@ -1,0 +1,13 @@
+generated: '2026-09-13'
+method: searched
+source: https://es-pera.org/metodologia/api/ + https://es-pera.org/llms.txt
+name: ES·pera API plans and pricing
+plan_count: 0
+free: true
+note: >-
+  ES·pera is a free, independent public open-data project. The API is open and
+  unauthenticated with no accounts, no paid tiers, and no billing. There are no
+  published plans; access is governed only by anonymous rate limits (120 req/min
+  overall, 20 req/min for /waiting/facets and /waiting/observations). No pricing,
+  subscription, or commercial-tier page exists to record.
+access_control: anonymous rate limits (see rate-limits/es-pera-rate-limits.yml)

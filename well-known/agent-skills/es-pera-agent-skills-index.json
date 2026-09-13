@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "es-pera-public-data",
+      "type": "skill-md",
+      "description": "Consult published ES·pera data about Spanish healthcare waiting lists and hospitals through the public read-only API while preserving release, source, period and reporting perimeter.",
+      "url": "/.well-known/agent-skills/es-pera-public-data/SKILL.md",
+      "digest": "sha256:128fd5810a52e0f22eef111c992b959af49811a9d6dd3421be1ca72cfaaece10"
+    }
+  ]
+}

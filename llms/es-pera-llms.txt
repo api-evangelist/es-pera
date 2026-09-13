@@ -1,0 +1,44 @@
+# ES·pera
+
+> ES·pera es un observatorio independiente en castellano para entender las listas de espera de la sanidad pública española mediante datos oficiales del Sistema Nacional de Salud y de los servicios autonómicos de salud.
+
+## Qué es ES·pera
+
+ES·pera reúne publicaciones oficiales dispersas y las transforma en páginas, series y comparaciones comprensibles. Permite saber cuántas personas esperan, cuánto dura la espera, cómo cambia con el tiempo y qué diferencias existen entre territorios, especialidades, procesos, hospitales y otros ámbitos cuando la fuente publica ese nivel de detalle.
+
+ES·pera no es una administración sanitaria ni sustituye a la fuente oficial. Tampoco estima cuánto esperará una persona concreta ni ofrece consejo médico. Su función es ordenar, contextualizar y hacer explorable información pública agregada, manteniendo visible su procedencia y sus límites.
+
+## Cómo está organizado el sitio
+
+- [Inicio](https://es-pera.org/): buscador general, cifras destacadas, últimas incorporaciones y accesos a las principales formas de explorar la espera.
+- [Visión SNS](https://es-pera.org/espana/): lectura nacional y evolución semestral del Sistema Nacional de Salud. Sirve para situar España y sus territorios con definiciones comunes.
+- [Primeras consultas](https://es-pera.org/consultas/): listas para acceder por primera vez a una especialidad, con totales, demoras, evolución y detalle por especialidad.
+- [Intervenciones quirúrgicas](https://es-pera.org/cirugia/): espera para cirugía, desde el total hasta las especialidades quirúrgicas.
+- [Procesos quirúrgicos](https://es-pera.org/procesos/): intervenciones concretas —por ejemplo, cataratas o prótesis— que pueden comportarse de forma muy distinta al total de cirugía.
+- [Comunidades](https://es-pera.org/comunidades/): directorio territorial. Cada comunidad tiene una ficha comparable basada en la serie SNS. Cuando existe una publicación autonómica suficientemente detallada, también ofrece una sección propia de datos con sus prestaciones, evolución, territorios u hospitales disponibles. Ambas capas proceden de fuentes y definiciones distintas y no deben confundirse.
+- Perfiles hospitalarios: se encuentran mediante el buscador y las secciones autonómicas. Pueden reunir espera, actividad, capacidad o recursos sólo cuando las fuentes permiten atribuirlos y compararlos de forma responsable. Un hospital y un complejo hospitalario no son necesariamente la misma unidad.
+- [Interanual](https://es-pera.org/interanual/): informes que comparan un corte con el equivalente del año anterior y destacan qué ha mejorado, qué ha empeorado y dónde se concentra el cambio.
+- [Actualizaciones](https://es-pera.org/actualizaciones/): registro de nuevos cortes e informes incorporados a ES·pera, separado por fuente y periodo publicado.
+- [Análisis](https://es-pera.org/analisis/): lecturas editoriales de patrones relevantes que no se aprecian en una cifra aislada, sin convertir asociaciones descriptivas en explicaciones causales.
+- [Comparar](https://es-pera.org/comparar/): comparación de dos comunidades con la misma métrica, definición y periodo del SNS.
+- [Exploradores](https://es-pera.org/exploradores/): herramientas interactivas para combinar territorio, tipo de lista, especialidad, proceso, métrica y tiempo sin abandonar una definición estadística común.
+- [Metodología](https://es-pera.org/metodologia/): fuentes, conceptos, criterios de comparabilidad, cobertura y límites de interpretación.
+
+## Cómo leer y citar los datos
+
+Conserve siempre la fuente, el periodo, la unidad, la métrica y el perímetro de cada cifra. Una ausencia o un valor `null` significa que el dato no está disponible: nunca equivale a cero. No combine cortes mensuales y semestrales como si formasen una única serie homogénea, ni mezcle sin advertencia la serie común del SNS con publicaciones autonómicas que usan otra definición.
+
+Las comparaciones válidas mantienen el mismo concepto y la misma unidad territorial. No deduzca equivalencias entre entidades por parecido de nombre ni traslade automáticamente el dato de un complejo a uno de sus hospitales. Si una página señala cobertura parcial, cambios de perímetro o advertencias de calidad, consérvelos en cualquier resumen.
+
+Al reutilizar una cifra, cite ES·pera como lugar de consulta y la fuente oficial indicada en la página. Para afirmaciones temporales, mencione el corte exacto: una fecha de incorporación a ES·pera no es la fecha del dato ni necesariamente la de publicación oficial.
+
+## Acceso estructurado para sistemas automáticos
+
+La interfaz pública es de solo lectura. Use únicamente `GET` o `HEAD`, haga consultas acotadas y, ante un `429`, respete `Retry-After` antes de reintentar.
+
+- [API Catalog](https://es-pera.org/.well-known/api-catalog): Linkset de descubrimiento conforme a RFC 9727; resuelva desde él las relaciones `service-desc`, `service-doc` y `status`.
+- [OpenAPI 3.1](https://es-pera.org/openapi.json): operaciones, parámetros, esquemas de respuesta y paginación de la API pública.
+- [Documentación de la API](https://es-pera.org/metodologia/api/): explicación humana del contrato de consulta.
+- [Agent Skills index](https://es-pera.org/.well-known/agent-skills/index.json): índice de descubrimiento v0.2.0; resuelva el artefacto declarado y verifique su digest SHA-256 antes de usarlo.
+- [Releases activas](https://es-pera.org/api/v1/releases/current): identificadores de las versiones de datos que sostienen la respuesta actual.
+- [Health](https://es-pera.org/api/v1/health): disponibilidad y referencias de las releases activas.

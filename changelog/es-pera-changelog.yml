@@ -1,0 +1,29 @@
+generated: '2026-09-13'
+method: searched
+source: live GET https://es-pera.org/api/v1/releases/current + https://es-pera.org/actualizaciones/
+name: ES·pera data release changelog
+scheme: >-
+  Content-addressed immutable data releases (release_id with content SHA-256), not a semver
+  API changelog. The API contract itself is versioned in the URI path (v1). Data updates are
+  narrated on the site's Actualizaciones page.
+current:
+  release_id: hospital-core-longitudinal-d4fc6fdc
+  label: Hospital core longitudinal 2021-2024 + detailed economics
+  data_date: '2024-12-31'
+  created_at: '2026-08-28 14:01:35'
+entries:
+  - release_id: hospital-core-longitudinal-d4fc6fdc
+    role: core
+    date: '2026-08-28'
+    highlights: Hospital core longitudinal 2021-2024 plus detailed economics.
+  - release_id: registry-2026-08-01-61cd0ef7e4ae
+    role: registry
+    date: '2026-08-28'
+    highlights: Hospital registry (942 centers; regcess reference 2026-08-01, CNH 2024-12-31).
+  - release_id: waiting-ed63be1de811
+    role: waiting
+    date: '2026-09-07'
+    highlights: >-
+      Autonomous waiting-list catalog (schema v2), incremental over waiting-d19330d52107;
+      unchanged components reused.
+human_log: https://es-pera.org/actualizaciones/

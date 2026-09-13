@@ -1,0 +1,41 @@
+generated: '2026-09-13'
+method: searched
+source: >-
+  https://es-pera.org/metodologia/api/ + live /api/v1/releases/current + /api/v1/health
+  + https://es-pera.org/actualizaciones/
+name: ES·pera API lifecycle
+versioning:
+  scheme: uri-path
+  current: v1
+  base: https://es-pera.org/api/v1
+data_release_model:
+  description: >-
+    Responses are served from immutable release identifiers pinned per deployment.
+    Each release carries a content SHA-256 for integrity and provenance. Three coordinated
+    releases back the surface.
+  observed_releases:
+    - id: hospital-core-longitudinal-d4fc6fdc
+      role: core (hospital core longitudinal 2021-2024 + detailed economics)
+      data_date: '2024-12-31'
+      created_at: '2026-08-28 14:01:35'
+      content_sha256: d4fc6fdca248c08b8abe444c887909394571fa364203e19211c8359cb63d992c
+    - id: registry-2026-08-01-61cd0ef7e4ae
+      role: registry
+      center_count: 942
+      created_at: '2026-08-28 08:31:57'
+    - id: waiting-ed63be1de811
+      role: waiting (autonomous waiting-list catalog, schema v2)
+      created_at: '2026-09-07T23:12:07+00:00'
+  discovery: GET /api/v1/releases/current returns the active release identifiers.
+health_endpoint: https://es-pera.org/api/v1/health
+deprecation_policy:
+  found: false
+  note: No documented deprecation/sunset policy or Sunset/Deprecation (RFC 8594) header usage was found.
+sla:
+  found: false
+status_page:
+  found: false
+  note: >-
+    A machine health endpoint (/api/v1/health) exists but there is no hosted status page
+    (statuspage.io / status.* subdomain) advertised.
+data_update_log: https://es-pera.org/actualizaciones/
