@@ -1,0 +1,44 @@
+name: ES·pera API
+description: Spanish-language open-data project comparing Spanish National Health System (SNS) healthcare waiting
+  lists across autonomous communities, specialties and procedures. Publishes free machine-readable open-data files
+  (CSV and static JSON), but exposes no documented REST/GraphQL API, no MCP server, and no confirmable llms.txt
+  or agent skills.
+url: https://raw.githubusercontent.com/api-evangelist/es-pera/refs/heads/main/apis.yml
+created: '2026-09-13'
+modified: '2026-09-13'
+specificationVersion: '0.21'
+tags:
+- healthcare
+- open data
+- waiting lists
+- hospital activity
+- Spain
+- public sector
+- government data
+apis:
+- name: ES·pera Open Data Files
+  description: 'Static, unauthenticated open-data exports of SNS waiting-list data: a bulk CSV and per-visualization
+    static JSON arrays. These are downloadable machine-readable files, not a documented parameterized API.'
+  humanURL: https://es-pera.org/metodologia/
+  baseURL: https://es-pera.org/data/
+  tags:
+  - healthcare
+  - open data
+  - waiting lists
+  - hospital activity
+  - Spain
+  - public sector
+  - government data
+  properties:
+  - type: OpenAPI
+    url: https://es-pera.org/openapi.json
+  - type: Documentation
+    url: https://es-pera.org/metodologia/
+maintainers:
+- FN: ES·pera API
+  url: https://es-pera.org/
+x-source:
+  via: apis.io/add es-pera 1d7101bd, parked no_consumable_surface
+  fetched: '2026-09-13'
+  note: 'Approved: the declared /data/ 404s but the real OpenAPI is at es-pera.org/openapi.json (200); pointer corrected.
+    Control 404s.'
