@@ -14,6 +14,15 @@ created: '2026-09-13'
 modified: '2026-09-13'
 specificationVersion: '0.21'
 tags:
+- Healthcare
+- Open Data
+- Waiting Lists
+- hospital activity
+- Spain
+- Public Sector
+- Government Data
+- SNS
+tags_raw:
 - healthcare
 - open data
 - waiting lists
@@ -23,29 +32,44 @@ tags:
 - government data
 - SNS
 apis:
-- name: ES·pera Public Data API
-  description: >-
-    Open, unauthenticated read-only REST API (GET/HEAD, JSON) over SNS hospital and
-    autonomous-community waiting-list open data. Nine operations across health/releases,
-    hospital entities and metrics, and paginated autonomous waiting-list observations.
-    Responses are served from immutable, content-addressed data releases; anonymous
-    traffic is rate limited (120/min overall, 20/min for facets and observations).
+- aid: es-pera:es-pera-estado-api
+  name: ES·pera API Estado API
+  description: Salud y releases fijadas por el despliegue.
   humanURL: https://es-pera.org/metodologia/api/
   baseURL: https://es-pera.org/api/v1
-  image: https://es-pera.org/favicon-espera.svg
   tags:
-  - healthcare
-  - open data
-  - waiting lists
-  - hospital activity
-  - Spain
-  - public sector
-  - government data
+  - Estado
   properties:
   - type: OpenAPI
-    url: openapi/es-pera-openapi.json
-  - type: Overlay
-    url: overlays/es-pera-openapi-overlay.yaml
+    url: openapi/es-pera-estado-api-openapi.yml
+  - type: Documentation
+    url: https://es-pera.org/metodologia/api/
+  - type: APIReference
+    url: https://es-pera.org/metodologia/api/
+- aid: es-pera:es-pera-hospitales-api
+  name: ES·pera API Hospitales API
+  description: Métricas, directorio y detalle hospitalario nacional.
+  humanURL: https://es-pera.org/metodologia/api/
+  baseURL: https://es-pera.org/api/v1
+  tags:
+  - Hospitales
+  properties:
+  - type: OpenAPI
+    url: openapi/es-pera-hospitales-api-openapi.yml
+  - type: Documentation
+    url: https://es-pera.org/metodologia/api/
+  - type: APIReference
+    url: https://es-pera.org/metodologia/api/
+- aid: es-pera:es-pera-listas-auton-micas-api
+  name: ES·pera API Listas autonómicas API
+  description: Catálogo acotado de listas de espera publicadas por las comunidades autónomas.
+  humanURL: https://es-pera.org/metodologia/api/
+  baseURL: https://es-pera.org/api/v1
+  tags:
+  - Listas autonómicas
+  properties:
+  - type: OpenAPI
+    url: openapi/es-pera-listas-auton-micas-api-openapi.yml
   - type: Documentation
     url: https://es-pera.org/metodologia/api/
   - type: APIReference
@@ -61,6 +85,8 @@ x-source:
     first-party OpenAPI 3.1 (9 read-only ops) is live at es-pera.org/openapi.json with
     servers https://es-pera.org/api/v1. baseURL and pointers corrected to the real API.
 common:
+- type: Overlay
+  url: overlays/es-pera-openapi-overlay.yaml
 - type: DomainSecurity
   url: security/es-pera-domain-security.yml
 - type: Website
