@@ -1,0 +1,230 @@
+openapi: 3.2.0
+info:
+  title: ES·pera Estado API
+  version: 1.0.0
+  description: API pública de solo lectura para consultar releases, métricas, hospitales y listas de espera autonómicas publicadas por ES·pera. Los datos se sirven desde releases inmutables fijadas en cada despliegue. La procedencia y las condiciones aplicables se conservan por conjunto de datos. El tráfico anónimo está limitado a 120 solicitudes por minuto; /waiting/facets y /waiting/observations tienen además un límite de 20 por minuto. Las respuestas 429 indican el tiempo de espera mediante Retry-After.
+servers:
+- url: https://es-pera.org/api/v1
+  description: Producción
+security: []
+tags:
+- name: Estado
+  description: Salud y releases fijadas por el despliegue.
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      summary: Comprueba el estado de la API y sus releases
+      tags:
+      - Estado
+      responses:
+        '200':
+          description: Todas las releases configuradas están accesibles.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /releases/current:
+    get:
+      operationId: getCurrentReleases
+      summary: Devuelve las releases activas del despliegue
+      tags:
+      - Estado
+      responses:
+        '200':
+          description: Metadatos de las releases hospitalaria, de registro y autonómica.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentReleases'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+components:
+  responses:
+    Unavailable:
+      description: Una release configurada no está disponible.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequests:
+      description: Se ha superado el límite de tráfico anónimo. El cliente debe esperar antes de reintentar.
+      headers:
+        Retry-After:
+          description: Segundos que debe esperar el cliente antes de reintentar.
+          schema:
+            type: integer
+            minimum: 1
+            example: 60
+        RateLimit-Limit:
+          description: Máximo aplicable en la ventana actual.
+          schema:
+            type: integer
+            example: 120
+        RateLimit-Policy:
+          description: Política aplicada con límite y ventana en segundos.
+          schema:
+            type: string
+            example: 120;w=60
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+    RegistryRelease:
+      type: object
+      required:
+      - release_id
+      - content_sha256
+      - center_count
+      properties:
+        release_id:
+          type: string
+        source_commit:
+          type: string
+        content_sha256:
+          type: string
+        regcess_reference_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        cnh_reference_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        center_count:
+          type: integer
+        service_count:
+          type: integer
+        technology_count:
+          type: integer
+        peer_count:
+          type: integer
+        imported_at:
+          type: string
+      additionalProperties: false
+    CurrentReleases:
+      type: object
+      required:
+      - release_id
+      - content_sha256
+      - registryRelease
+      - waitingRelease
+      properties:
+        release_id:
+          type: string
+        schema_version:
+          type: integer
+        content_sha256:
+          type: string
+        label:
+          type: string
+        source_commit:
+          type: string
+        data_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        created_at:
+          type: string
+        registryRelease:
+          $ref: '#/components/schemas/RegistryRelease'
+        waitingRelease:
+          oneOf:
+          - $ref: '#/components/schemas/WaitingRelease'
+          - type: 'null'
+      additionalProperties: false
+    Health:
+      type: object
+      required:
+      - ok
+      - service
+      - releaseId
+      - registryReleaseId
+      properties:
+        ok:
+          type: boolean
+        service:
+          type: string
+          const: es-pera-core
+        releaseId:
+          type: string
+        registryReleaseId:
+          type: string
+        sourceCommit:
+          type:
+          - string
+          - 'null'
+        dataDate:
+          type:
+          - string
+          - 'null'
+          format: date
+        contentSha256:
+          type:
+          - string
+          - 'null'
+        registryContentSha256:
+          type:
+          - string
+          - 'null'
+        registryCenterCount:
+          type:
+          - integer
+          - 'null'
+        waitingReleaseId:
+          type:
+          - string
+          - 'null'
+        waitingContentSha256:
+          type:
+          - string
+          - 'null'
+    WaitingRelease:
+      type: object
+      required:
+      - catalog_release_id
+      - content_sha256
+      properties:
+        catalog_release_id:
+          type: string
+        schema_version:
+          type: integer
+        content_sha256:
+          type: string
+        label:
+          type: string
+        source_commit:
+          type: string
+        created_at:
+          type: string
+        notes:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+externalDocs:
+  description: Documentación de la API
+  url: https://es-pera.org/metodologia/api/

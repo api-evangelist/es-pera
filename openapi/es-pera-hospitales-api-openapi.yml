@@ -1,0 +1,448 @@
+openapi: 3.2.0
+info:
+  title: ES·pera Hospitales API
+  version: 1.0.0
+  description: API pública de solo lectura para consultar releases, métricas, hospitales y listas de espera autonómicas publicadas por ES·pera. Los datos se sirven desde releases inmutables fijadas en cada despliegue. La procedencia y las condiciones aplicables se conservan por conjunto de datos. El tráfico anónimo está limitado a 120 solicitudes por minuto; /waiting/facets y /waiting/observations tienen además un límite de 20 por minuto. Las respuestas 429 indican el tiempo de espera mediante Retry-After.
+servers:
+- url: https://es-pera.org/api/v1
+  description: Producción
+security: []
+tags:
+- name: Hospitales
+  description: Métricas, directorio y detalle hospitalario nacional.
+paths:
+  /metrics:
+    get:
+      operationId: listMetrics
+      summary: Enumera las métricas hospitalarias publicadas
+      tags:
+      - Hospitales
+      responses:
+        '200':
+          description: Catálogo de métricas de la release hospitalaria activa.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - releaseId
+                - metrics
+                properties:
+                  releaseId:
+                    type: string
+                  metrics:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+        '503':
+          $ref: '#/components/responses/Unavailable'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /entities:
+    get:
+      operationId: listEntities
+      summary: Busca hospitales o enumera complejos
+      tags:
+      - Hospitales
+      parameters:
+      - name: q
+        in: query
+        description: Nombre, CCN o código del hospital.
+        schema:
+          type: string
+          maxLength: 100
+      - name: ccaa
+        in: query
+        description: Nombre exacto de la comunidad autónoma.
+        schema:
+          type: string
+          maxLength: 80
+      - name: type
+        in: query
+        description: Perímetro de entidad.
+        schema:
+          type: string
+          enum:
+          - hospital
+          - complex
+      - name: limit
+        in: query
+        description: Número máximo de resultados.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 20
+      responses:
+        '200':
+          description: Entidades de la release activa.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - releaseId
+                - registryReleaseId
+                - entities
+                properties:
+                  releaseId:
+                    type: string
+                  registryReleaseId:
+                    type: string
+                  entities:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntitySummary'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /entities/{entityId}:
+    get:
+      operationId: getEntity
+      summary: Devuelve el detalle publicado de una entidad
+      tags:
+      - Hospitales
+      parameters:
+      - name: entityId
+        in: path
+        required: true
+        description: Identificador devuelto por el listado de entidades.
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 160
+      responses:
+        '200':
+          description: Identidad pública, capacidades, observaciones y procedencia pública disponibles. Los identificadores de unidad fuente y la evidencia interna de resolución de identidad no forman parte del contrato público.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntityDetailResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+components:
+  responses:
+    NotFound:
+      description: La entidad no existe en la release activa.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unavailable:
+      description: Una release configurada no está disponible.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Los filtros o el identificador no son válidos.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequests:
+      description: Se ha superado el límite de tráfico anónimo. El cliente debe esperar antes de reintentar.
+      headers:
+        Retry-After:
+          description: Segundos que debe esperar el cliente antes de reintentar.
+          schema:
+            type: integer
+            minimum: 1
+            example: 60
+        RateLimit-Limit:
+          description: Máximo aplicable en la ventana actual.
+          schema:
+            type: integer
+            example: 120
+        RateLimit-Policy:
+          description: Política aplicada con límite y ventana en segundos.
+          schema:
+            type: string
+            example: 120;w=60
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    EntityDetailResponse:
+      type: object
+      required:
+      - entity
+      - capabilities
+      - observations
+      - peerReference
+      - peerReferenceYears
+      - provenance
+      properties:
+        releaseId:
+          type: string
+        registryReleaseId:
+          type: string
+        entity:
+          $ref: '#/components/schemas/EntitySummary'
+        capabilities:
+          oneOf:
+          - $ref: '#/components/schemas/EntityCapabilities'
+          - type: 'null'
+        observations:
+          type: array
+          items:
+            $ref: '#/components/schemas/HospitalObservation'
+        peerReference:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        peerReferenceYears:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        provenance:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicHospitalProvenance'
+        registry:
+          type: object
+          properties:
+            regcessCurrent:
+              type: boolean
+            regcessReferenceDate:
+              type:
+              - string
+              - 'null'
+              format: date
+            cnhReferenceDate:
+              type:
+              - string
+              - 'null'
+              format: date
+            address:
+              type:
+              - string
+              - 'null'
+            phone:
+              type:
+              - string
+              - 'null'
+            url:
+              type:
+              - string
+              - 'null'
+            bedsInstalled:
+              type:
+              - integer
+              - 'null'
+            services:
+              type: array
+              items:
+                type: object
+                additionalProperties: true
+            technologies:
+              type: array
+              items:
+                type: object
+                additionalProperties: true
+            peers:
+              type: array
+              items:
+                type: object
+                additionalProperties: true
+          additionalProperties: false
+      additionalProperties: false
+    PublicHospitalProvenance:
+      type: object
+      required:
+      - metric_id
+      - period_year
+      - layer
+      - publisher
+      - perimeter
+      properties:
+        metric_id:
+          type:
+          - string
+          - 'null'
+        period_year:
+          type: integer
+        layer:
+          type: string
+          const: national-hospital-activity
+        publisher:
+          type: string
+          const: Ministerio de Sanidad
+        perimeter:
+          type: string
+      additionalProperties: false
+    HospitalObservation:
+      type: object
+      required:
+      - metric_id
+      - label
+      - domain
+      - kind
+      - period_year
+      - observation_kind
+      - perimeter
+      properties:
+        metric_id:
+          type: string
+        label:
+          type: string
+        short_label:
+          type:
+          - string
+          - 'null'
+        domain:
+          type: string
+        kind:
+          type: string
+        period_year:
+          type: integer
+        observation_kind:
+          type: string
+        value_num:
+          type:
+          - number
+          - 'null'
+        perimeter:
+          type: string
+      additionalProperties: false
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+    EntityCapabilities:
+      type: object
+      properties:
+        structure:
+          type: boolean
+        activityLatest:
+          type: boolean
+        economics:
+          type: boolean
+        technology:
+          type: boolean
+        waiting:
+          type: boolean
+        longitudinal:
+          type: boolean
+        specialties:
+          type: boolean
+        waitingSystem:
+          type:
+          - string
+          - 'null'
+        waitingLabel:
+          type:
+          - string
+          - 'null'
+        waitingDataUrl:
+          type:
+          - string
+          - 'null'
+        seriesYears:
+          type: array
+          items:
+            type: integer
+        specialtyYears:
+          type: array
+          items:
+            type: integer
+      additionalProperties: false
+    EntitySummary:
+      type: object
+      required:
+      - id
+      - entityType
+      - name
+      properties:
+        id:
+          type: string
+          description: Identificador opaco devuelto por la API. Debe reutilizarse sin intentar derivar identificadores de las fuentes internas.
+        entityType:
+          type: string
+          enum:
+          - hospital
+          - complex
+        ccn:
+          type:
+          - string
+          - 'null'
+          description: Código público del registro sanitario cuando está disponible.
+        codcnh:
+          type:
+          - string
+          - 'null'
+          description: Código público del Catálogo Nacional de Hospitales cuando está disponible.
+        name:
+          type: string
+        municipality:
+          type:
+          - string
+          - 'null'
+        ccaa:
+          type:
+          - string
+          - 'null'
+        routePath:
+          type:
+          - string
+          - 'null'
+        regcessCurrent:
+          type: boolean
+        centreClass:
+          type:
+          - string
+          - 'null'
+        dependencyFamily:
+          type:
+          - string
+          - 'null'
+        teaching:
+          type:
+          - boolean
+          - 'null'
+        snsConcert:
+          type:
+          - boolean
+          - 'null'
+        snsRelationship:
+          type:
+          - string
+          - 'null'
+        snsRelationshipLabel:
+          type:
+          - string
+          - 'null'
+        authorizedServiceCount:
+          type:
+          - integer
+          - 'null'
+        capabilities:
+          oneOf:
+          - $ref: '#/components/schemas/EntityCapabilities'
+          - type: 'null'
+      additionalProperties: false
+externalDocs:
+  description: Documentación de la API
+  url: https://es-pera.org/metodologia/api/

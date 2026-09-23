@@ -1,0 +1,301 @@
+openapi: 3.2.0
+info:
+  title: ES·pera Listas autonómicas API
+  version: 1.0.0
+  description: API pública de solo lectura para consultar releases, métricas, hospitales y listas de espera autonómicas publicadas por ES·pera. Los datos se sirven desde releases inmutables fijadas en cada despliegue. La procedencia y las condiciones aplicables se conservan por conjunto de datos. El tráfico anónimo está limitado a 120 solicitudes por minuto; /waiting/facets y /waiting/observations tienen además un límite de 20 por minuto. Las respuestas 429 indican el tiempo de espera mediante Retry-After.
+servers:
+- url: https://es-pera.org/api/v1
+  description: Producción
+security: []
+tags:
+- name: Listas autonómicas
+  description: Catálogo acotado de listas de espera publicadas por las comunidades autónomas.
+paths:
+  /waiting/releases/current:
+    get:
+      operationId: getCurrentWaitingRelease
+      summary: Devuelve la release autonómica activa
+      tags:
+      - Listas autonómicas
+      responses:
+        '200':
+          description: Metadatos del catálogo autonómico activo.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WaitingRelease'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /waiting/communities:
+    get:
+      operationId: listWaitingCommunities
+      summary: Enumera la cobertura autonómica disponible
+      tags:
+      - Listas autonómicas
+      responses:
+        '200':
+          description: Cobertura por comunidad y dominio.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - releaseId
+                - availability
+                properties:
+                  releaseId:
+                    type: string
+                  availability:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+        '503':
+          $ref: '#/components/responses/Unavailable'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /waiting/facets:
+    get:
+      operationId: getWaitingFacets
+      summary: Enumera filtros disponibles para una comunidad
+      tags:
+      - Listas autonómicas
+      parameters:
+      - $ref: '#/components/parameters/Community'
+      - $ref: '#/components/parameters/Domain'
+      - $ref: '#/components/parameters/Period'
+      - $ref: '#/components/parameters/DatasetId'
+      responses:
+        '200':
+          description: Periodos, perímetros, territorios, centros, prestaciones y cohortes disponibles.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /waiting/observations:
+    get:
+      operationId: listWaitingObservations
+      summary: Consulta observaciones autonómicas paginadas
+      tags:
+      - Listas autonómicas
+      parameters:
+      - $ref: '#/components/parameters/Community'
+      - $ref: '#/components/parameters/Domain'
+      - $ref: '#/components/parameters/Period'
+      - $ref: '#/components/parameters/DatasetId'
+      - name: perimeter
+        in: query
+        schema:
+          type: string
+          enum:
+          - community
+          - province
+          - area
+          - centre
+      - name: geographyId
+        in: query
+        schema:
+          type: string
+          maxLength: 100
+      - name: centreId
+        in: query
+        schema:
+          type: string
+          maxLength: 100
+      - name: itemId
+        in: query
+        schema:
+          type: string
+          maxLength: 100
+      - name: cohortId
+        in: query
+        schema:
+          type: string
+          maxLength: 100
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 100
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 50000
+          default: 0
+      responses:
+        '200':
+          description: Página de observaciones con contexto, valores y procedencia.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - releaseId
+                - filters
+                - pagination
+                - observations
+                properties:
+                  releaseId:
+                    type: string
+                  filters:
+                    type: object
+                    additionalProperties: true
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  observations:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+components:
+  parameters:
+    Period:
+      name: period
+      in: query
+      schema:
+        type: string
+        pattern: ^[0-9]{4}-(0[1-9]|1[0-2])$
+        example: 2026-07
+    Domain:
+      name: domain
+      in: query
+      schema:
+        type: string
+        enum:
+        - consultation
+        - surgery
+        - diagnostic_test
+    Community:
+      name: community
+      in: query
+      required: true
+      description: Slug de la comunidad devuelto por /waiting/communities.
+      schema:
+        type: string
+        pattern: ^[a-z0-9-]+$
+        maxLength: 80
+    DatasetId:
+      name: datasetId
+      in: query
+      schema:
+        type: string
+        pattern: ^[a-z0-9-]+$
+        maxLength: 100
+  responses:
+    Unavailable:
+      description: Una release configurada no está disponible.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Los filtros o el identificador no son válidos.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequests:
+      description: Se ha superado el límite de tráfico anónimo. El cliente debe esperar antes de reintentar.
+      headers:
+        Retry-After:
+          description: Segundos que debe esperar el cliente antes de reintentar.
+          schema:
+            type: integer
+            minimum: 1
+            example: 60
+        RateLimit-Limit:
+          description: Máximo aplicable en la ventana actual.
+          schema:
+            type: integer
+            example: 120
+        RateLimit-Policy:
+          description: Política aplicada con límite y ventana en segundos.
+          schema:
+            type: string
+            example: 120;w=60
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+    Pagination:
+      type: object
+      required:
+      - limit
+      - offset
+      - returned
+      - hasMore
+      - nextOffset
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+        returned:
+          type: integer
+        hasMore:
+          type: boolean
+        nextOffset:
+          type:
+          - integer
+          - 'null'
+    WaitingRelease:
+      type: object
+      required:
+      - catalog_release_id
+      - content_sha256
+      properties:
+        catalog_release_id:
+          type: string
+        schema_version:
+          type: integer
+        content_sha256:
+          type: string
+        label:
+          type: string
+        source_commit:
+          type: string
+        created_at:
+          type: string
+        notes:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+externalDocs:
+  description: Documentación de la API
+  url: https://es-pera.org/metodologia/api/
