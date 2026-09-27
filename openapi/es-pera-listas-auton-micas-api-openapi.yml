@@ -167,39 +167,6 @@ paths:
         '429':
           $ref: '#/components/responses/TooManyRequests'
 components:
-  parameters:
-    Period:
-      name: period
-      in: query
-      schema:
-        type: string
-        pattern: ^[0-9]{4}-(0[1-9]|1[0-2])$
-        example: 2026-07
-    Domain:
-      name: domain
-      in: query
-      schema:
-        type: string
-        enum:
-        - consultation
-        - surgery
-        - diagnostic_test
-    Community:
-      name: community
-      in: query
-      required: true
-      description: Slug de la comunidad devuelto por /waiting/communities.
-      schema:
-        type: string
-        pattern: ^[a-z0-9-]+$
-        maxLength: 80
-    DatasetId:
-      name: datasetId
-      in: query
-      schema:
-        type: string
-        pattern: ^[a-z0-9-]+$
-        maxLength: 100
   responses:
     Unavailable:
       description: Una release configurada no está disponible.
@@ -296,6 +263,39 @@ components:
           - string
           - 'null'
       additionalProperties: false
+  parameters:
+    Period:
+      name: period
+      in: query
+      schema:
+        type: string
+        pattern: ^[0-9]{4}-(0[1-9]|1[0-2])$
+        example: 2026-07
+    DatasetId:
+      name: datasetId
+      in: query
+      schema:
+        type: string
+        pattern: ^[a-z0-9-]+$
+        maxLength: 100
+    Community:
+      name: community
+      in: query
+      required: true
+      description: Slug de la comunidad devuelto por /waiting/communities.
+      schema:
+        type: string
+        pattern: ^[a-z0-9-]+$
+        maxLength: 80
+    Domain:
+      name: domain
+      in: query
+      schema:
+        type: string
+        enum:
+        - consultation
+        - surgery
+        - diagnostic_test
 externalDocs:
   description: Documentación de la API
   url: https://es-pera.org/metodologia/api/

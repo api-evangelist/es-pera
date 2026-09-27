@@ -90,6 +90,38 @@ components:
               type: string
             message:
               type: string
+    CurrentReleases:
+      type: object
+      required:
+      - release_id
+      - content_sha256
+      - registryRelease
+      - waitingRelease
+      properties:
+        release_id:
+          type: string
+        schema_version:
+          type: integer
+        content_sha256:
+          type: string
+        label:
+          type: string
+        source_commit:
+          type: string
+        data_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        created_at:
+          type: string
+        registryRelease:
+          $ref: '#/components/schemas/RegistryRelease'
+        waitingRelease:
+          oneOf:
+          - $ref: '#/components/schemas/WaitingRelease'
+          - type: 'null'
+      additionalProperties: false
     RegistryRelease:
       type: object
       required:
@@ -123,38 +155,6 @@ components:
           type: integer
         imported_at:
           type: string
-      additionalProperties: false
-    CurrentReleases:
-      type: object
-      required:
-      - release_id
-      - content_sha256
-      - registryRelease
-      - waitingRelease
-      properties:
-        release_id:
-          type: string
-        schema_version:
-          type: integer
-        content_sha256:
-          type: string
-        label:
-          type: string
-        source_commit:
-          type: string
-        data_date:
-          type:
-          - string
-          - 'null'
-          format: date
-        created_at:
-          type: string
-        registryRelease:
-          $ref: '#/components/schemas/RegistryRelease'
-        waitingRelease:
-          oneOf:
-          - $ref: '#/components/schemas/WaitingRelease'
-          - type: 'null'
       additionalProperties: false
     Health:
       type: object
