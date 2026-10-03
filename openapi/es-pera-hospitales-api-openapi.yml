@@ -130,18 +130,6 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
 components:
   responses:
-    Unavailable:
-      description: Una release configurada no está disponible.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Los filtros o el identificador no son válidos.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     TooManyRequests:
       description: Se ha superado el límite de tráfico anónimo. El cliente debe esperar antes de reintentar.
       headers:
@@ -165,8 +153,20 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    Unavailable:
+      description: Una release configurada no está disponible.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     NotFound:
       description: La entidad no existe en la release activa.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Los filtros o el identificador no son válidos.
       content:
         application/json:
           schema:
@@ -258,21 +258,64 @@ components:
                 additionalProperties: true
           additionalProperties: false
       additionalProperties: false
-    Error:
+    PublicHospitalProvenance:
       type: object
       required:
-      - error
+      - metric_id
+      - period_year
+      - layer
+      - publisher
+      - perimeter
       properties:
-        error:
-          type: object
-          required:
-          - code
-          - message
-          properties:
-            code:
-              type: string
-            message:
-              type: string
+        metric_id:
+          type:
+          - string
+          - 'null'
+        period_year:
+          type: integer
+        layer:
+          type: string
+          const: national-hospital-activity
+        publisher:
+          type: string
+          const: Ministerio de Sanidad
+        perimeter:
+          type: string
+      additionalProperties: false
+    HospitalObservation:
+      type: object
+      required:
+      - metric_id
+      - label
+      - domain
+      - kind
+      - period_year
+      - observation_kind
+      - perimeter
+      properties:
+        metric_id:
+          type: string
+        label:
+          type: string
+        short_label:
+          type:
+          - string
+          - 'null'
+        domain:
+          type: string
+        kind:
+          type: string
+        period_year:
+          type: integer
+        observation_kind:
+          type: string
+        value_num:
+          type:
+          - number
+          - 'null'
+        perimeter:
+          type: string
+      additionalProperties: false
     EntitySummary:
       type: object
       required:
@@ -347,64 +390,21 @@ components:
           - $ref: '#/components/schemas/EntityCapabilities'
           - type: 'null'
       additionalProperties: false
-    HospitalObservation:
+    Error:
       type: object
       required:
-      - metric_id
-      - label
-      - domain
-      - kind
-      - period_year
-      - observation_kind
-      - perimeter
+      - error
       properties:
-        metric_id:
-          type: string
-        label:
-          type: string
-        short_label:
-          type:
-          - string
-          - 'null'
-        domain:
-          type: string
-        kind:
-          type: string
-        period_year:
-          type: integer
-        observation_kind:
-          type: string
-        value_num:
-          type:
-          - number
-          - 'null'
-        perimeter:
-          type: string
-      additionalProperties: false
-    PublicHospitalProvenance:
-      type: object
-      required:
-      - metric_id
-      - period_year
-      - layer
-      - publisher
-      - perimeter
-      properties:
-        metric_id:
-          type:
-          - string
-          - 'null'
-        period_year:
-          type: integer
-        layer:
-          type: string
-          const: national-hospital-activity
-        publisher:
-          type: string
-          const: Ministerio de Sanidad
-        perimeter:
-          type: string
-      additionalProperties: false
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+            message:
+              type: string
     EntityCapabilities:
       type: object
       properties:

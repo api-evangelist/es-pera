@@ -174,12 +174,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Los filtros o el identificador no son válidos.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     TooManyRequests:
       description: Se ha superado el límite de tráfico anónimo. El cliente debe esperar antes de reintentar.
       headers:
@@ -203,22 +197,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Los filtros o el identificador no son válidos.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - code
-          - message
-          properties:
-            code:
-              type: string
-            message:
-              type: string
     Pagination:
       type: object
       required:
@@ -263,30 +248,22 @@ components:
           - string
           - 'null'
       additionalProperties: false
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+            message:
+              type: string
   parameters:
-    Period:
-      name: period
-      in: query
-      schema:
-        type: string
-        pattern: ^[0-9]{4}-(0[1-9]|1[0-2])$
-        example: 2026-07
-    DatasetId:
-      name: datasetId
-      in: query
-      schema:
-        type: string
-        pattern: ^[a-z0-9-]+$
-        maxLength: 100
-    Community:
-      name: community
-      in: query
-      required: true
-      description: Slug de la comunidad devuelto por /waiting/communities.
-      schema:
-        type: string
-        pattern: ^[a-z0-9-]+$
-        maxLength: 80
     Domain:
       name: domain
       in: query
@@ -296,6 +273,29 @@ components:
         - consultation
         - surgery
         - diagnostic_test
+    DatasetId:
+      name: datasetId
+      in: query
+      schema:
+        type: string
+        pattern: ^[a-z0-9-]+$
+        maxLength: 100
+    Period:
+      name: period
+      in: query
+      schema:
+        type: string
+        pattern: ^[0-9]{4}-(0[1-9]|1[0-2])$
+        example: 2026-07
+    Community:
+      name: community
+      in: query
+      required: true
+      description: Slug de la comunidad devuelto por /waiting/communities.
+      schema:
+        type: string
+        pattern: ^[a-z0-9-]+$
+        maxLength: 80
 externalDocs:
   description: Documentación de la API
   url: https://es-pera.org/metodologia/api/
