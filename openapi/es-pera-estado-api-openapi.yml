@@ -75,6 +75,101 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
+    Health:
+      type: object
+      required:
+      - ok
+      - service
+      - releaseId
+      - registryReleaseId
+      properties:
+        ok:
+          type: boolean
+        service:
+          type: string
+          const: es-pera-core
+        releaseId:
+          type: string
+        registryReleaseId:
+          type: string
+        sourceCommit:
+          type:
+          - string
+          - 'null'
+        dataDate:
+          type:
+          - string
+          - 'null'
+          format: date
+        contentSha256:
+          type:
+          - string
+          - 'null'
+        registryContentSha256:
+          type:
+          - string
+          - 'null'
+        registryCenterCount:
+          type:
+          - integer
+          - 'null'
+        waitingReleaseId:
+          type:
+          - string
+          - 'null'
+        waitingContentSha256:
+          type:
+          - string
+          - 'null'
+    RegistryRelease:
+      type: object
+      required:
+      - release_id
+      - content_sha256
+      - center_count
+      properties:
+        release_id:
+          type: string
+        source_commit:
+          type: string
+        content_sha256:
+          type: string
+        regcess_reference_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        cnh_reference_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        center_count:
+          type: integer
+        service_count:
+          type: integer
+        technology_count:
+          type: integer
+        peer_count:
+          type: integer
+        imported_at:
+          type: string
+      additionalProperties: false
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+            message:
+              type: string
     CurrentReleases:
       type: object
       required:
@@ -130,101 +225,6 @@ components:
           - string
           - 'null'
       additionalProperties: false
-    Error:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - code
-          - message
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-    RegistryRelease:
-      type: object
-      required:
-      - release_id
-      - content_sha256
-      - center_count
-      properties:
-        release_id:
-          type: string
-        source_commit:
-          type: string
-        content_sha256:
-          type: string
-        regcess_reference_date:
-          type:
-          - string
-          - 'null'
-          format: date
-        cnh_reference_date:
-          type:
-          - string
-          - 'null'
-          format: date
-        center_count:
-          type: integer
-        service_count:
-          type: integer
-        technology_count:
-          type: integer
-        peer_count:
-          type: integer
-        imported_at:
-          type: string
-      additionalProperties: false
-    Health:
-      type: object
-      required:
-      - ok
-      - service
-      - releaseId
-      - registryReleaseId
-      properties:
-        ok:
-          type: boolean
-        service:
-          type: string
-          const: es-pera-core
-        releaseId:
-          type: string
-        registryReleaseId:
-          type: string
-        sourceCommit:
-          type:
-          - string
-          - 'null'
-        dataDate:
-          type:
-          - string
-          - 'null'
-          format: date
-        contentSha256:
-          type:
-          - string
-          - 'null'
-        registryContentSha256:
-          type:
-          - string
-          - 'null'
-        registryCenterCount:
-          type:
-          - integer
-          - 'null'
-        waitingReleaseId:
-          type:
-          - string
-          - 'null'
-        waitingContentSha256:
-          type:
-          - string
-          - 'null'
 externalDocs:
   description: Documentación de la API
   url: https://es-pera.org/metodologia/api/

@@ -172,6 +172,83 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
+    EntityCapabilities:
+      type: object
+      properties:
+        structure:
+          type: boolean
+        activityLatest:
+          type: boolean
+        economics:
+          type: boolean
+        technology:
+          type: boolean
+        waiting:
+          type: boolean
+        longitudinal:
+          type: boolean
+        specialties:
+          type: boolean
+        waitingSystem:
+          type:
+          - string
+          - 'null'
+        waitingLabel:
+          type:
+          - string
+          - 'null'
+        waitingDataUrl:
+          type:
+          - string
+          - 'null'
+        seriesYears:
+          type: array
+          items:
+            type: integer
+        specialtyYears:
+          type: array
+          items:
+            type: integer
+      additionalProperties: false
+    PublicHospitalProvenance:
+      type: object
+      required:
+      - metric_id
+      - period_year
+      - layer
+      - publisher
+      - perimeter
+      properties:
+        metric_id:
+          type:
+          - string
+          - 'null'
+        period_year:
+          type: integer
+        layer:
+          type: string
+          const: national-hospital-activity
+        publisher:
+          type: string
+          const: Ministerio de Sanidad
+        perimeter:
+          type: string
+      additionalProperties: false
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+            message:
+              type: string
     EntityDetailResponse:
       type: object
       required:
@@ -258,64 +335,6 @@ components:
                 additionalProperties: true
           additionalProperties: false
       additionalProperties: false
-    PublicHospitalProvenance:
-      type: object
-      required:
-      - metric_id
-      - period_year
-      - layer
-      - publisher
-      - perimeter
-      properties:
-        metric_id:
-          type:
-          - string
-          - 'null'
-        period_year:
-          type: integer
-        layer:
-          type: string
-          const: national-hospital-activity
-        publisher:
-          type: string
-          const: Ministerio de Sanidad
-        perimeter:
-          type: string
-      additionalProperties: false
-    HospitalObservation:
-      type: object
-      required:
-      - metric_id
-      - label
-      - domain
-      - kind
-      - period_year
-      - observation_kind
-      - perimeter
-      properties:
-        metric_id:
-          type: string
-        label:
-          type: string
-        short_label:
-          type:
-          - string
-          - 'null'
-        domain:
-          type: string
-        kind:
-          type: string
-        period_year:
-          type: integer
-        observation_kind:
-          type: string
-        value_num:
-          type:
-          - number
-          - 'null'
-        perimeter:
-          type: string
-      additionalProperties: false
     EntitySummary:
       type: object
       required:
@@ -390,58 +409,39 @@ components:
           - $ref: '#/components/schemas/EntityCapabilities'
           - type: 'null'
       additionalProperties: false
-    Error:
+    HospitalObservation:
       type: object
       required:
-      - error
+      - metric_id
+      - label
+      - domain
+      - kind
+      - period_year
+      - observation_kind
+      - perimeter
       properties:
-        error:
-          type: object
-          required:
-          - code
-          - message
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-    EntityCapabilities:
-      type: object
-      properties:
-        structure:
-          type: boolean
-        activityLatest:
-          type: boolean
-        economics:
-          type: boolean
-        technology:
-          type: boolean
-        waiting:
-          type: boolean
-        longitudinal:
-          type: boolean
-        specialties:
-          type: boolean
-        waitingSystem:
+        metric_id:
+          type: string
+        label:
+          type: string
+        short_label:
           type:
           - string
           - 'null'
-        waitingLabel:
+        domain:
+          type: string
+        kind:
+          type: string
+        period_year:
+          type: integer
+        observation_kind:
+          type: string
+        value_num:
           type:
-          - string
+          - number
           - 'null'
-        waitingDataUrl:
-          type:
-          - string
-          - 'null'
-        seriesYears:
-          type: array
-          items:
-            type: integer
-        specialtyYears:
-          type: array
-          items:
-            type: integer
+        perimeter:
+          type: string
       additionalProperties: false
 externalDocs:
   description: Documentación de la API
