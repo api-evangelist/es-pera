@@ -11,7 +11,7 @@ description: >-
 url: https://raw.githubusercontent.com/api-evangelist/es-pera/refs/heads/main/apis.yml
 image: https://es-pera.org/favicon-espera.svg
 created: '2026-09-13'
-modified: '2026-09-13'
+modified: '2026-10-06'
 specificationVersion: '0.21'
 tags:
 - Healthcare
@@ -85,6 +85,8 @@ x-source:
     first-party OpenAPI 3.1 (9 read-only ops) is live at es-pera.org/openapi.json with
     servers https://es-pera.org/api/v1. baseURL and pointers corrected to the real API.
 common:
+- url: https://es-pera.org/actualizaciones/feed.atom
+  type: BlogRSS
 - type: Overlay
   url: overlays/es-pera-openapi-overlay.yaml
 - type: DomainSecurity
