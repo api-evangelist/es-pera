@@ -130,6 +130,12 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
 components:
   responses:
+    NotFound:
+      description: La entidad no existe en la release activa.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     TooManyRequests:
       description: Se ha superado el límite de tráfico anónimo. El cliente debe esperar antes de reintentar.
       headers:
@@ -159,12 +165,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: La entidad no existe en la release activa.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     BadRequest:
       description: Los filtros o el identificador no son válidos.
       content:
@@ -172,44 +172,6 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
-    EntityCapabilities:
-      type: object
-      properties:
-        structure:
-          type: boolean
-        activityLatest:
-          type: boolean
-        economics:
-          type: boolean
-        technology:
-          type: boolean
-        waiting:
-          type: boolean
-        longitudinal:
-          type: boolean
-        specialties:
-          type: boolean
-        waitingSystem:
-          type:
-          - string
-          - 'null'
-        waitingLabel:
-          type:
-          - string
-          - 'null'
-        waitingDataUrl:
-          type:
-          - string
-          - 'null'
-        seriesYears:
-          type: array
-          items:
-            type: integer
-        specialtyYears:
-          type: array
-          items:
-            type: integer
-      additionalProperties: false
     PublicHospitalProvenance:
       type: object
       required:
@@ -233,107 +195,6 @@ components:
           const: Ministerio de Sanidad
         perimeter:
           type: string
-      additionalProperties: false
-    Error:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - code
-          - message
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-    EntityDetailResponse:
-      type: object
-      required:
-      - entity
-      - capabilities
-      - observations
-      - peerReference
-      - peerReferenceYears
-      - provenance
-      properties:
-        releaseId:
-          type: string
-        registryReleaseId:
-          type: string
-        entity:
-          $ref: '#/components/schemas/EntitySummary'
-        capabilities:
-          oneOf:
-          - $ref: '#/components/schemas/EntityCapabilities'
-          - type: 'null'
-        observations:
-          type: array
-          items:
-            $ref: '#/components/schemas/HospitalObservation'
-        peerReference:
-          type:
-          - object
-          - 'null'
-          additionalProperties: true
-        peerReferenceYears:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        provenance:
-          type: array
-          items:
-            $ref: '#/components/schemas/PublicHospitalProvenance'
-        registry:
-          type: object
-          properties:
-            regcessCurrent:
-              type: boolean
-            regcessReferenceDate:
-              type:
-              - string
-              - 'null'
-              format: date
-            cnhReferenceDate:
-              type:
-              - string
-              - 'null'
-              format: date
-            address:
-              type:
-              - string
-              - 'null'
-            phone:
-              type:
-              - string
-              - 'null'
-            url:
-              type:
-              - string
-              - 'null'
-            bedsInstalled:
-              type:
-              - integer
-              - 'null'
-            services:
-              type: array
-              items:
-                type: object
-                additionalProperties: true
-            technologies:
-              type: array
-              items:
-                type: object
-                additionalProperties: true
-            peers:
-              type: array
-              items:
-                type: object
-                additionalProperties: true
-          additionalProperties: false
       additionalProperties: false
     EntitySummary:
       type: object
@@ -442,6 +303,145 @@ components:
           - 'null'
         perimeter:
           type: string
+      additionalProperties: false
+    EntityDetailResponse:
+      type: object
+      required:
+      - entity
+      - capabilities
+      - observations
+      - peerReference
+      - peerReferenceYears
+      - provenance
+      properties:
+        releaseId:
+          type: string
+        registryReleaseId:
+          type: string
+        entity:
+          $ref: '#/components/schemas/EntitySummary'
+        capabilities:
+          oneOf:
+          - $ref: '#/components/schemas/EntityCapabilities'
+          - type: 'null'
+        observations:
+          type: array
+          items:
+            $ref: '#/components/schemas/HospitalObservation'
+        peerReference:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        peerReferenceYears:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        provenance:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicHospitalProvenance'
+        registry:
+          type: object
+          properties:
+            regcessCurrent:
+              type: boolean
+            regcessReferenceDate:
+              type:
+              - string
+              - 'null'
+              format: date
+            cnhReferenceDate:
+              type:
+              - string
+              - 'null'
+              format: date
+            address:
+              type:
+              - string
+              - 'null'
+            phone:
+              type:
+              - string
+              - 'null'
+            url:
+              type:
+              - string
+              - 'null'
+            bedsInstalled:
+              type:
+              - integer
+              - 'null'
+            services:
+              type: array
+              items:
+                type: object
+                additionalProperties: true
+            technologies:
+              type: array
+              items:
+                type: object
+                additionalProperties: true
+            peers:
+              type: array
+              items:
+                type: object
+                additionalProperties: true
+          additionalProperties: false
+      additionalProperties: false
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+    EntityCapabilities:
+      type: object
+      properties:
+        structure:
+          type: boolean
+        activityLatest:
+          type: boolean
+        economics:
+          type: boolean
+        technology:
+          type: boolean
+        waiting:
+          type: boolean
+        longitudinal:
+          type: boolean
+        specialties:
+          type: boolean
+        waitingSystem:
+          type:
+          - string
+          - 'null'
+        waitingLabel:
+          type:
+          - string
+          - 'null'
+        waitingDataUrl:
+          type:
+          - string
+          - 'null'
+        seriesYears:
+          type: array
+          items:
+            type: integer
+        specialtyYears:
+          type: array
+          items:
+            type: integer
       additionalProperties: false
 externalDocs:
   description: Documentación de la API

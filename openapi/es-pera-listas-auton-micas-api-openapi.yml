@@ -167,6 +167,39 @@ paths:
         '429':
           $ref: '#/components/responses/TooManyRequests'
 components:
+  parameters:
+    Period:
+      name: period
+      in: query
+      schema:
+        type: string
+        pattern: ^[0-9]{4}-(0[1-9]|1[0-2])$
+        example: 2026-07
+    Community:
+      name: community
+      in: query
+      required: true
+      description: Slug de la comunidad devuelto por /waiting/communities.
+      schema:
+        type: string
+        pattern: ^[a-z0-9-]+$
+        maxLength: 80
+    Domain:
+      name: domain
+      in: query
+      schema:
+        type: string
+        enum:
+        - consultation
+        - surgery
+        - diagnostic_test
+    DatasetId:
+      name: datasetId
+      in: query
+      schema:
+        type: string
+        pattern: ^[a-z0-9-]+$
+        maxLength: 100
   responses:
     TooManyRequests:
       description: Se ha superado el límite de tráfico anónimo. El cliente debe esperar antes de reintentar.
@@ -203,39 +236,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    Domain:
-      name: domain
-      in: query
-      schema:
-        type: string
-        enum:
-        - consultation
-        - surgery
-        - diagnostic_test
-    Community:
-      name: community
-      in: query
-      required: true
-      description: Slug de la comunidad devuelto por /waiting/communities.
-      schema:
-        type: string
-        pattern: ^[a-z0-9-]+$
-        maxLength: 80
-    Period:
-      name: period
-      in: query
-      schema:
-        type: string
-        pattern: ^[0-9]{4}-(0[1-9]|1[0-2])$
-        example: 2026-07
-    DatasetId:
-      name: datasetId
-      in: query
-      schema:
-        type: string
-        pattern: ^[a-z0-9-]+$
-        maxLength: 100
   schemas:
     Error:
       type: object
@@ -252,27 +252,6 @@ components:
               type: string
             message:
               type: string
-    Pagination:
-      type: object
-      required:
-      - limit
-      - offset
-      - returned
-      - hasMore
-      - nextOffset
-      properties:
-        limit:
-          type: integer
-        offset:
-          type: integer
-        returned:
-          type: integer
-        hasMore:
-          type: boolean
-        nextOffset:
-          type:
-          - integer
-          - 'null'
     WaitingRelease:
       type: object
       required:
@@ -296,6 +275,27 @@ components:
           - string
           - 'null'
       additionalProperties: false
+    Pagination:
+      type: object
+      required:
+      - limit
+      - offset
+      - returned
+      - hasMore
+      - nextOffset
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+        returned:
+          type: integer
+        hasMore:
+          type: boolean
+        nextOffset:
+          type:
+          - integer
+          - 'null'
 externalDocs:
   description: Documentación de la API
   url: https://es-pera.org/metodologia/api/
