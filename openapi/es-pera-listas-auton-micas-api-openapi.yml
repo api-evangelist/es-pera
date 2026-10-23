@@ -299,3 +299,9 @@ components:
 externalDocs:
   description: Documentación de la API
   url: https://es-pera.org/metodologia/api/
+x-provenance:
+  method: harvested
+  publisher: ES·pera API
+  source: https://es-pera.org/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
