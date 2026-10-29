@@ -1,4 +1,4 @@
-# es-pera
+# ES·pera API
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,4 +64,111 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-ES·pera is an independent Spanish-language observatory of Spanish National Health System (SNS) and autonomous-community healthcare waiting lists and hospital activity, republished as comparable, provenance-preserving open data through a free, open, read-only OpenAPI 3.1 REST API.
+ES·pera is an independent Spanish-language observatory that gathers scattered official Spanish National Health System (SNS) and autonomous-community publications on healthcare waiting lists and hospital activity, and republishes them as comparable, provenance-preserving open data. It exposes a free, open, unauthenticated read-only REST API (OpenAPI 3.1 at /api/v1) covering hospital entities, national activity metrics and autonomous waiting-list observations, served from immutable content-addressed data releases. Discovery is via an RFC 9727 API catalog, an llms.txt, and a provider-published Agent Skill; there is no MCP server, no A2A agent card, and no client SDK.
+
+**Areas:** Healthcare · Open Data · Waiting Lists · hospital activity · Spain · Public Sector · Government Data · SNS
+
+## ES·pera API on APIs.io
+
+Everything profiled for ES·pera API is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/es-pera/](https://apis.io/providers/es-pera/)** — or go straight to one of the APIs or properties below.
+
+### APIs (3)
+
+- [ES·pera API Estado API](https://apis.io/apis/es-pera/es-pera-estado-api/) — Salud y releases fijadas por el despliegue.
+- [ES·pera API Hospitales API](https://apis.io/apis/es-pera/es-pera-hospitales-api/) — Métricas, directorio y detalle hospitalario nacional.
+- [ES·pera API Listas autonómicas API](https://apis.io/apis/es-pera/es-pera-listas-auton-micas-api/) — Catálogo acotado de listas de espera publicadas por las comunidades autónomas.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [ES·pera MCP (candidate)](https://apis.io/servers/es-pera/es-pera-mcp-candidate/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Es Pera Openapi Overlay](https://apis.io/overlays/es-pera/es-pera-openapi-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Es Pera Authentication](https://apis.io/security/es-pera/es-pera-authentication/)
+- [Es Pera Domain Security](https://apis.io/security/es-pera/es-pera-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Es Pera Plans Pricing](https://apis.io/plans/es-pera/es-pera-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Es Pera Rate Limits](https://apis.io/rate-limits/es-pera/es-pera-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://es-pera.org/)
+- [Documentation](https://es-pera.org/metodologia/)
+
+## API Evangelist rating
+
+**Kin Score 31.7** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 67.9 |
+| Contract quality | 42.2 |
+| Contract governance | 0.0 |
+| Operational transparency | 36.8 |
+| Developer ergonomics | 45.2 |
+| Access clarity | 0.0 |
+
+**Agent readiness 32.1** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | na |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | na |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | verified |
+| Event Surface Described | — |
+| Agent Skills | yes |
+| Well Known Catalog | yes |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | na |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 16.7** — Government & Public Sector
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/es-pera/](https://apis.io/providers/es-pera/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for ES·pera API: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/es-pera/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
